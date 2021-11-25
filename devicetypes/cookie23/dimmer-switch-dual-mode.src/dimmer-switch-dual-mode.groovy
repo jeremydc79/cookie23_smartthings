@@ -57,11 +57,11 @@ metadata {
 				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState:"turningOff"
 				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
-			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-				attributeState "level", action:"switch level.setLevel"
-			}
 			tileAttribute ("device.nightlight", key: "SECONDARY_CONTROL") {
 				attributeState "nightlight", label: "Toggle Nightlight", action:"switch.toggleNightlight", icon:"st.secondary.refresh"
+			}
+			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+				attributeState "level", action:"switch level.setLevel"
 			}
 		}
 
@@ -74,17 +74,17 @@ metadata {
 		standardTile("refresh", "device.switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
-
+		
+		controlTile("nightlight", "device.nightight", "button", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+			state "default", label:'Toggle Nightlight', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
+		}
+		
 		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
 		}
-		
-		standardTile("nightlight", "device.nightlight", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-			state "nightlight", label:'Toggle Nightlight', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
-		}
 
-		main(["switch", "nightlight"])
-		details(["switch", "level", "nightlight", "refresh"])
+		main(["switch"])
+		details(["switch", "nightlight", "level", "refresh"])
 
 	}
 }
