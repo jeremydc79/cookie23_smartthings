@@ -60,6 +60,9 @@ metadata {
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
 			}
+			tileAttribute ("device.nightlight", key: "NIGHTLIGHT_CONTROL") {
+				attributeState "nightlight", action:"switch.toggleNightlight"
+			}
 		}
 
 		standardTile("indicator", "device.indicatorStatus", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
@@ -215,6 +218,12 @@ def off() {
 			zwave.basicV1.basicSet(value: 0x00).format(),
 			zwave.switchMultilevelV1.switchMultilevelGet().format()
 	],5000)
+}
+
+def toggleNightlight() {
+	on()
+	off()
+	on()
 }
 
 def setLevel(value) {
