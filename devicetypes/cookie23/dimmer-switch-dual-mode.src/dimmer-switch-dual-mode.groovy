@@ -64,7 +64,7 @@ metadata {
 			}
 			tileAttribute ("device.nightlight", key: "PRIMARY_CONTROL") {
 				attributeState "nightlightOn", label: "Toggle Nightlight On", action:"switch toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOff"
-                attributeState "nightlightOff", label: "Toggle Nightlight Off", action:"switch toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
+				attributeState "nightlightOff", label: "Toggle Nightlight Off", action:"switch toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
 			}
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
@@ -83,7 +83,7 @@ metadata {
 		
 		standardTile("toggleNightlight", "device.nightlight", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "nightlightOn", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
-            state "nightlightOff", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
+			state "nightlightOff", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
 		}
 		
 		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
