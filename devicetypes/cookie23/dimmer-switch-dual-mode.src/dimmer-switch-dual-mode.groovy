@@ -75,7 +75,7 @@ metadata {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
 		
-		controlTile("nightlight", "device.nightight", "button", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+		controlTile("nightlight", "device.nightlight", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "default", label:'Toggle Nightlight', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
 		}
 		
