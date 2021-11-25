@@ -60,7 +60,7 @@ metadata {
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
 			}
-			tileAttribute ("device.nightlight", key: "NIGHTLIGHT_CONTROL") {
+			tileAttribute ("device.nightlight", key: "PRIMARY_CONTROL") {
 				attributeState "nightlight", action:"switch.toggleNightlight"
 			}
 		}
