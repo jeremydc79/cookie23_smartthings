@@ -12,7 +12,7 @@
  *
  */
 metadata {
-	definition (name: "Dimmer Switch Dual Mode", namespace: "cookie23", author: "cookie23", ocfDeviceType: "oic.d.light", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
+	definition (name: "Dimmer Switch Dual Mode", namespace: "cookie23", author: "Cookie23", ocfDeviceType: "oic.d.light", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
 		capability "Switch Level"
 		capability "Actuator"
 		capability "Indicator"
