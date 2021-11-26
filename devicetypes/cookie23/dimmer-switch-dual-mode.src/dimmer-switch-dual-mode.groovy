@@ -31,21 +31,6 @@ metadata {
 	}
 
 	simulator {
-		status "on":  "command: 2003, payload: FF"
-		status "off": "command: 2003, payload: 00"
-		status "09%": "command: 2003, payload: 09"
-		status "10%": "command: 2003, payload: 0A"
-		status "33%": "command: 2003, payload: 21"
-		status "66%": "command: 2003, payload: 42"
-		status "99%": "command: 2003, payload: 63"
-
-		// reply messages
-		reply "2001FF,delay 5000,2602": "command: 2603, payload: FF"
-		reply "200100,delay 5000,2602": "command: 2603, payload: 00"
-		reply "200119,delay 5000,2602": "command: 2603, payload: 19"
-		reply "200132,delay 5000,2602": "command: 2603, payload: 32"
-		reply "20014B,delay 5000,2602": "command: 2603, payload: 4B"
-		reply "200163,delay 5000,2602": "command: 2603, payload: 63"
 	}
 
 	preferences {
@@ -66,8 +51,8 @@ metadata {
 				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
 			tileAttribute ("device.nightlight", key: "VALUE_CONTROL") {
-				attributeState "nightlightOn", label: "Toggle Nightlight Off", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOff"
-				attributeState "nightlightOff", label: "Toggle Nightlight On", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
+				attributeState "nightlightOff", label: "Toggle Nightlight", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
+                attributeState "nightlightOn", label: "Toggle Nightlight", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOff"
 			}
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
@@ -83,18 +68,17 @@ metadata {
 		standardTile("refresh", "device.switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
-		
-		controlTile("toggleNightlight", "device.nightlight", "switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-			state "nightlightOn", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
-			state "nightlightOff", defaultState: "true", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
-		}
+        
+        standardTile("nightlight", "device.nightlight", width: 2, height: 2) {
+        	state "default", label: "${currentValue}", action:"switch.toggleNightlight"
+        }
 		
 		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
 		}
 
 		main(["switch"])
-		details(["switch", "toggleNightlight", "level", "refresh"])
+		details(["switch", "nightlight", "level", "refresh"])
 
 	}
 }
@@ -235,11 +219,13 @@ def off() {
 }
 
 def toggleNightlight() {
-    zwave.switchMultilevelV3.switchMultilevelSet(value: 0xFF).format()
     delayBetween([
-    	zwave.switchMultilevelV3.switchMultilevelSet(value: 0x00).format(),
-    	zwave.switchMultilevelV3.switchMultilevelSet(value: 0xFF).format()
-    ],500)  
+    	delayBetween([
+            zwave.switchMultilevelV3.switchMultilevelSet(value: 0x00).format(),
+            zwave.switchMultilevelV3.switchMultilevelSet(value: 0xFF).format()
+        ],500),
+      	zwave.switchMultilevelV1.switchMultilevelGet().format()
+    ],5000)
 }
 
 def setLevel(value) {
