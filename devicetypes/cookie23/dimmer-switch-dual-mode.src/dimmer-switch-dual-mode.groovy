@@ -21,6 +21,9 @@ metadata {
 		capability "Sensor"
 		capability "Health Check"
 		capability "Light"
+        
+		attribute "nightlight", "enum", ["nightlightOn", "nightlightOff"]
+        command "toggleNightlight"
 
 		fingerprint mfr:"0063", prod:"4457", deviceJoinName: "GE Dimmer Switch" //GE In-Wall Smart Dimmer
 		fingerprint mfr:"0063", prod:"4944", deviceJoinName: "GE Dimmer Switch" //GE In-Wall Smart Dimmer
@@ -62,9 +65,9 @@ metadata {
 				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState:"turningOff"
 				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
-			tileAttribute ("device.nightlight", key: "PRIMARY_CONTROL") {
-				attributeState "nightlightOn", label: "Toggle Nightlight On", action:"switch toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOff"
-				attributeState "nightlightOff", label: "Toggle Nightlight Off", action:"switch toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
+			tileAttribute ("device.nightlight", key: "VALUE_CONTROL") {
+				attributeState "nightlightOn", label: "Toggle Nightlight Off", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOff"
+				attributeState "nightlightOff", label: "Toggle Nightlight On", action:"switch.toggleNightlight", icon:"st.secondary.refresh", nextState:"nightlightOn"
 			}
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
@@ -81,9 +84,9 @@ metadata {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
 		
-		standardTile("toggleNightlight", "device.nightlight", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+		controlTile("toggleNightlight", "device.nightlight", "switch", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
 			state "nightlightOn", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
-			state "nightlightOff", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
+			state "nightlightOff", defaultState: "true", label:'${currentValue}', action:"switch.toggleNightlight", icon:"st.secondary.refresh"
 		}
 		
 		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
@@ -232,9 +235,17 @@ def off() {
 }
 
 def toggleNightlight() {
-	on()
-	off()
-	on()
+    log.debug "Toggling Nightlight Mode"
+    delayBetween([
+        delayBetween([
+            delayBetween([
+                zwave.basicV1.basicSet(value: 0xFF).format(),
+                zwave.basicV1.basicSet(value: 0x00).format()
+            ],1000),
+            zwave.basicV1.basicSet(value: 0xFF).format()
+        ],2000),
+    	zwave.switchMultilevelV1.switchMultilevelGet().format()
+    ],5000)
 }
 
 def setLevel(value) {
