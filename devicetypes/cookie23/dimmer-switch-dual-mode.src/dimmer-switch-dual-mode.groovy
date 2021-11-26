@@ -235,17 +235,11 @@ def off() {
 }
 
 def toggleNightlight() {
-    log.debug "Toggling Nightlight Mode"
+    zwave.switchMultilevelV3.switchMultilevelSet(value: 0xFF).format()
     delayBetween([
-        delayBetween([
-            delayBetween([
-                zwave.basicV1.basicSet(value: 0xFF).format(),
-                zwave.basicV1.basicSet(value: 0x00).format()
-            ],1000),
-            zwave.basicV1.basicSet(value: 0xFF).format()
-        ],2000),
-    	zwave.switchMultilevelV1.switchMultilevelGet().format()
-    ],5000)
+    	zwave.switchMultilevelV3.switchMultilevelSet(value: 0x00).format(),
+    	zwave.switchMultilevelV3.switchMultilevelSet(value: 0xFF).format()
+    ],500)  
 }
 
 def setLevel(value) {
